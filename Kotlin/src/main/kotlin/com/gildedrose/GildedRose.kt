@@ -12,52 +12,61 @@ class GildedRose(var items: Array<Item>) {
 
     fun endOfDay() {
         for (i in items.indices) {
-            if (items[i].name != AGED_BRIE && items[i].name != BACKSTAGE_PASSES) {
-                if (items[i].quality > ITEM_MIN_QUALITY) {
-                    if (items[i].name != SULFURAS) {
-                        items[i].quality = items[i].quality - 1
+            val item = items[i]
+            if (item.name != AGED_BRIE && item.name != BACKSTAGE_PASSES) {
+                if (item.quality > ITEM_MIN_QUALITY) {
+                    if (item.name != SULFURAS) {
+                        item.quality--
                     }
                 }
             } else {
-                if (items[i].quality < ITEM_MAX_QUALITY) {
-                    items[i].quality = items[i].quality + 1
-
-                    if (items[i].name == BACKSTAGE_PASSES) {
-                        if (items[i].sellInDays < BACKSTAGE_PASS_THRESHOLD_1) {
-                            if (items[i].quality < ITEM_MAX_QUALITY) {
-                                items[i].quality = items[i].quality + 1
-                            }
-                        }
-
-                        if (items[i].sellInDays < BACKSTAGE_PASS_THRESHOLD_2) {
-                            if (items[i].quality < ITEM_MAX_QUALITY) {
-                                items[i].quality = items[i].quality + 1
-                            }
-                        }
-                    }
-                }
+                updateItemQuality(item)
             }
 
-            if (items[i].name != SULFURAS) {
-                items[i].sellInDays = items[i].sellInDays - 1
+            if (item.name != SULFURAS) {
+                item.sellInDays--
             }
 
-            if (items[i].sellInDays < 0) {
-                if (items[i].name != AGED_BRIE) {
-                    if (items[i].name != BACKSTAGE_PASSES) {
-                        if (items[i].quality > ITEM_MIN_QUALITY) {
-                            if (items[i].name != SULFURAS) {
-                                items[i].quality = items[i].quality - 1
+            if (item.sellInDays < 0) {
+                if (item.name != AGED_BRIE) {
+                    if (item.name != BACKSTAGE_PASSES) {
+                        if (item.quality > ITEM_MIN_QUALITY) {
+                            if (item.name != SULFURAS) {
+                                item.quality--
                             }
                         }
                     } else {
-                        items[i].quality = items[i].quality - items[i].quality
+                        item.quality = 0
                     }
                 } else {
-                    if (items[i].quality < ITEM_MAX_QUALITY) {
-                        items[i].quality = items[i].quality + 1
+                    if (item.quality < ITEM_MAX_QUALITY) {
+                        item.quality++
                     }
                 }
+            }
+        }
+    }
+
+    private fun updateItemQuality(item: Item) {
+        if (item.quality < ITEM_MAX_QUALITY) {
+            item.quality++
+
+            if (item.name == BACKSTAGE_PASSES) {
+                updateBackstagePassQuality(item)
+            }
+        }
+    }
+
+    private fun updateBackstagePassQuality(backstagePass: Item) {
+        if (backstagePass.sellInDays < BACKSTAGE_PASS_THRESHOLD_1) {
+            if (backstagePass.quality < ITEM_MAX_QUALITY) {
+                backstagePass.quality++
+            }
+        }
+
+        if (backstagePass.sellInDays < BACKSTAGE_PASS_THRESHOLD_2) {
+            if (backstagePass.quality < ITEM_MAX_QUALITY) {
+                backstagePass.quality++
             }
         }
     }
