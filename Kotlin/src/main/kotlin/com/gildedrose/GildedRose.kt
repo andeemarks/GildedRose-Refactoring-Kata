@@ -26,42 +26,44 @@ class GildedRose(var items: Array<Item>) {
     }
 
     private fun updateItem(item: Item) {
-        item.quality = max(ITEM_MIN_QUALITY, item.quality - 1)
-
-        updateSellInDays(item)
+        decreaseQuality(item)
+        decreaseSellInDays(item)
 
         if (item.sellInDays < 0) {
-            item.quality = max(ITEM_MIN_QUALITY, item.quality - 1)
+            decreaseQuality(item)
         }
     }
 
     private fun updateBrie(brie: Item) {
-        updateItemQuality(brie)
-        updateSellInDays(brie)
+        increaseQuality(brie)
+        decreaseSellInDays(brie)
     }
 
     private fun doNothing() {}
 
     private fun updateBackstagePasses(backstagePass: Item) {
-        updateBackstagePassQuality(backstagePass)
-
-        updateSellInDays(backstagePass)
+        increaseBackstagePassQuality(backstagePass)
+        decreaseSellInDays(backstagePass)
 
         if (backstagePass.sellInDays < 0) {
             backstagePass.quality = 0
         }
     }
 
-    private fun updateSellInDays(item: Item) {
+    private fun decreaseQuality(item: Item) {
+        item.quality = max(ITEM_MIN_QUALITY, item.quality - 1)
+    }
+
+    private fun decreaseSellInDays(item: Item) {
         item.sellInDays--
     }
 
-    private fun updateItemQuality(item: Item) {
+    private fun increaseQuality(item: Item) {
         item.quality = min(ITEM_MAX_QUALITY, item.quality + 1)
     }
 
-    private fun updateBackstagePassQuality(backstagePass: Item) {
-        updateItemQuality(backstagePass)
+    private fun increaseBackstagePassQuality(backstagePass: Item) {
+        increaseQuality(backstagePass)
         if (backstagePass.quality < ITEM_MAX_QUALITY) {
             if (backstagePass.sellInDays < BACKSTAGE_PASS_THRESHOLD_1) {
                 backstagePass.quality++
