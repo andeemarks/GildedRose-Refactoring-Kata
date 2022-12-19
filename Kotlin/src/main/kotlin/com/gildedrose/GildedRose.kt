@@ -1,5 +1,8 @@
 package com.gildedrose
 
+import java.lang.Integer.max
+import java.lang.Integer.min
+
 private const val AGED_BRIE = "Aged Brie"
 private const val BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert"
 private const val SULFURAS = "Sulfuras, Hand of Ragnaros"
@@ -13,59 +16,71 @@ class GildedRose(var items: Array<Item>) {
     fun endOfDay() {
         for (i in items.indices) {
             val item = items[i]
-            if (item.name != AGED_BRIE && item.name != BACKSTAGE_PASSES) {
-                if (item.quality > ITEM_MIN_QUALITY) {
-                    if (item.name != SULFURAS) {
-                        item.quality--
-                    }
+            when (item.name) {
+                AGED_BRIE -> {
+                    updateBrie(item)
                 }
-            } else {
-                updateItemQuality(item)
-            }
 
-            updateSellInDays(item)
+                BACKSTAGE_PASSES -> {
+                    updateBackstagePasses(item)
+                }
 
-            if (item.sellInDays < 0) {
-                if (item.name != AGED_BRIE) {
-                    if (item.name != BACKSTAGE_PASSES) {
-                        if (item.quality > ITEM_MIN_QUALITY) {
-                            if (item.name != SULFURAS) {
-                                item.quality--
-                            }
-                        }
-                    } else {
-                        item.quality = 0
-                    }
+                SULFURAS -> {
+                    updateSulfuras(item)
+                }
+
+                else -> {
+                    updateItem(item)
                 }
             }
+        }
+    }
+
+    private fun updateItem(item: Item) {
+        item.quality = max(ITEM_MIN_QUALITY, item.quality - 1)
+
+        updateSellInDays(item)
+
+        if (item.sellInDays < 0) {
+            item.quality = max(ITEM_MIN_QUALITY, item.quality - 1)
+        }
+    }
+
+    private fun updateBrie(brie: Item) {
+        updateItemQuality(brie)
+        updateSellInDays(brie)
+    }
+
+    private fun updateSulfuras(sulfuras: Item) {
+        //        NOOP
+    }
+
+    private fun updateBackstagePasses(backstagePass: Item) {
+        updateBackstagePassQuality(backstagePass)
+
+        updateSellInDays(backstagePass)
+
+        if (backstagePass.sellInDays < 0) {
+            backstagePass.quality = 0
         }
     }
 
     private fun updateSellInDays(item: Item) {
-        if (item.name != SULFURAS) {
-            item.sellInDays--
-        }
+        item.sellInDays--
     }
 
     private fun updateItemQuality(item: Item) {
-        if (item.quality < ITEM_MAX_QUALITY) {
-            item.quality++
-
-            if (item.name == BACKSTAGE_PASSES) {
-                updateBackstagePassQuality(item)
-            }
-        }
+        item.quality = min(ITEM_MAX_QUALITY, item.quality + 1)
     }
 
     private fun updateBackstagePassQuality(backstagePass: Item) {
-        if (backstagePass.sellInDays < BACKSTAGE_PASS_THRESHOLD_1) {
-            if (backstagePass.quality < ITEM_MAX_QUALITY) {
+        updateItemQuality(backstagePass)
+        if (backstagePass.quality < ITEM_MAX_QUALITY) {
+            if (backstagePass.sellInDays < BACKSTAGE_PASS_THRESHOLD_1) {
                 backstagePass.quality++
             }
-        }
 
-        if (backstagePass.sellInDays < BACKSTAGE_PASS_THRESHOLD_2) {
-            if (backstagePass.quality < ITEM_MAX_QUALITY) {
+            if (backstagePass.sellInDays < BACKSTAGE_PASS_THRESHOLD_2) {
                 backstagePass.quality++
             }
         }
