@@ -14,13 +14,12 @@ private const val ITEM_MIN_QUALITY = 0
 class GildedRose(var items: Array<Item>) {
 
     fun endOfDay() {
-        for (i in items.indices) {
-            val item = items[i]
-            when (item.name) {
-                AGED_BRIE -> updateBrie(item)
-                BACKSTAGE_PASSES -> updateBackstagePasses(item)
+        items.forEach {
+            when (it.name) {
+                AGED_BRIE -> updateBrie(it)
+                BACKSTAGE_PASSES -> updateBackstagePasses(it)
                 SULFURAS -> doNothing()
-                else -> updateItem(item)
+                else -> updateItem(it)
             }
         }
     }
