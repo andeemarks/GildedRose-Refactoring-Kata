@@ -64,14 +64,16 @@ class GildedRose(var items: Array<Item>) {
 
     private fun increaseBackstagePassQuality(backstagePass: Item) {
         increaseQuality(backstagePass)
-        if (backstagePass.quality < ITEM_MAX_QUALITY) {
-            if (backstagePass.sellInDays < BACKSTAGE_PASS_THRESHOLD_1) {
-                backstagePass.quality++
-            }
+        if (backstagePass.quality >= ITEM_MAX_QUALITY) {
+            return
+        }
 
-            if (backstagePass.sellInDays < BACKSTAGE_PASS_THRESHOLD_2) {
-                backstagePass.quality++
-            }
+        if (backstagePass.sellInDays < BACKSTAGE_PASS_THRESHOLD_1) {
+            backstagePass.quality++
+        }
+
+        if (backstagePass.sellInDays < BACKSTAGE_PASS_THRESHOLD_2) {
+            backstagePass.quality++
         }
     }
 
