@@ -36,10 +36,6 @@ class GildedRose(var items: Array<Item>) {
                     } else {
                         item.quality = 0
                     }
-                } else {
-                    if (item.quality < ITEM_MAX_QUALITY) {
-                        item.quality++
-                    }
                 }
             }
         }
