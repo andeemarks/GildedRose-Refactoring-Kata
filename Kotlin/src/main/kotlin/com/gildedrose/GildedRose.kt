@@ -17,21 +17,10 @@ class GildedRose(var items: Array<Item>) {
         for (i in items.indices) {
             val item = items[i]
             when (item.name) {
-                AGED_BRIE -> {
-                    updateBrie(item)
-                }
-
-                BACKSTAGE_PASSES -> {
-                    updateBackstagePasses(item)
-                }
-
-                SULFURAS -> {
-                    updateSulfuras(item)
-                }
-
-                else -> {
-                    updateItem(item)
-                }
+                AGED_BRIE -> updateBrie(item)
+                BACKSTAGE_PASSES -> updateBackstagePasses(item)
+                SULFURAS -> doNothing()
+                else -> updateItem(item)
             }
         }
     }
@@ -51,9 +40,7 @@ class GildedRose(var items: Array<Item>) {
         updateSellInDays(brie)
     }
 
-    private fun updateSulfuras(sulfuras: Item) {
-        //        NOOP
-    }
+    private fun doNothing() {}
 
     private fun updateBackstagePasses(backstagePass: Item) {
         updateBackstagePassQuality(backstagePass)
