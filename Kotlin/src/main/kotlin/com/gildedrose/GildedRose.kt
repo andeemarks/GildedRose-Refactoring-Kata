@@ -23,9 +23,7 @@ class GildedRose(var items: Array<Item>) {
                 updateItemQuality(item)
             }
 
-            if (item.name != SULFURAS) {
-                item.sellInDays--
-            }
+            updateSellInDays(item)
 
             if (item.sellInDays < 0) {
                 if (item.name != AGED_BRIE) {
@@ -44,6 +42,12 @@ class GildedRose(var items: Array<Item>) {
                     }
                 }
             }
+        }
+    }
+
+    private fun updateSellInDays(item: Item) {
+        if (item.name != SULFURAS) {
+            item.sellInDays--
         }
     }
 
