@@ -7,8 +7,8 @@ private const val AGED_BRIE = "Aged Brie"
 private const val BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert"
 private const val SULFURAS = "Sulfuras, Hand of Ragnaros"
 private const val ITEM_MAX_QUALITY = 50
-private const val BACKSTAGE_PASS_THRESHOLD_1 = 11
-private const val BACKSTAGE_PASS_THRESHOLD_2 = 6
+private const val DAYS_TO_CONCERT_THRESHOLD_1 = 10
+private const val DAYS_TO_CONCERT_THRESHOLD_2 = 5
 private const val ITEM_MIN_QUALITY = 0
 
 class GildedRose(var items: Array<Item>) {
@@ -17,8 +17,8 @@ class GildedRose(var items: Array<Item>) {
         items.forEach {
             when (it.name) {
                 AGED_BRIE -> updateBrie(it)
-                BACKSTAGE_PASSES -> updateBackstagePasses(it)
-                SULFURAS -> doNothing()
+                BACKSTAGE_PASSES -> updateBackstagePass(it)
+                SULFURAS -> {}
                 else -> updateItem(it)
             }
         }
@@ -34,15 +34,9 @@ class GildedRose(var items: Array<Item>) {
         decreaseSellInDays(brie)
     }
 
-    private fun doNothing() {}
-
-    private fun updateBackstagePasses(backstagePass: Item) {
-        increaseBackstagePassQuality(backstagePass)
+    private fun updateBackstagePass(backstagePass: Item) {
         decreaseSellInDays(backstagePass)
-
-        if (backstagePass.sellInDays < 0) {
-            backstagePass.quality = 0
-        }
+        increaseBackstagePassQuality(backstagePass)
     }
 
     private fun decreaseQuality(item: Item) {
@@ -62,17 +56,20 @@ class GildedRose(var items: Array<Item>) {
     }
 
     private fun increaseBackstagePassQuality(backstagePass: Item) {
-        increaseQuality(backstagePass)
-        if (backstagePass.quality >= ITEM_MAX_QUALITY) {
+        if (backstagePass.sellInDays < 0) {
+            backstagePass.quality = 0
+
             return
         }
 
-        if (backstagePass.sellInDays < BACKSTAGE_PASS_THRESHOLD_1) {
-            backstagePass.quality++
+        increaseQuality(backstagePass)
+
+        if (backstagePass.sellInDays <= DAYS_TO_CONCERT_THRESHOLD_1) {
+            increaseQuality(backstagePass)
         }
 
-        if (backstagePass.sellInDays < BACKSTAGE_PASS_THRESHOLD_2) {
-            backstagePass.quality++
+        if (backstagePass.sellInDays <= DAYS_TO_CONCERT_THRESHOLD_2) {
+            increaseQuality(backstagePass)
         }
     }
 

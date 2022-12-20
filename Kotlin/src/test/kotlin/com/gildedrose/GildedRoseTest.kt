@@ -50,8 +50,11 @@ internal class GildedRoseTest {
     @Test
     fun backstagePassQualityIncreasesAsTheSellInDaysApproaches() {
         val startingQuality = 5
-        val itemBefore10DaysToConcert = itemAfterEndOfDay(Item("Backstage passes to a TAFKAL80ETC concert", 11, startingQuality))
+        val itemBefore10DaysToConcert = itemAfterEndOfDay(Item("Backstage passes to a TAFKAL80ETC concert", 12, startingQuality))
         assertEquals(startingQuality + 1, itemBefore10DaysToConcert.quality)
+
+        val itemAt10DaysToConcert = itemAfterEndOfDay(Item("Backstage passes to a TAFKAL80ETC concert", 11, startingQuality))
+        assertEquals(startingQuality + 2, itemAt10DaysToConcert.quality)
 
         val itemBefore5DaysToConcert = itemAfterEndOfDay(Item("Backstage passes to a TAFKAL80ETC concert", 10, 5))
         assertEquals(startingQuality + 2, itemBefore5DaysToConcert.quality)
