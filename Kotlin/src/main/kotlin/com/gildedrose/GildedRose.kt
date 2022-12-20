@@ -25,12 +25,8 @@ class GildedRose(var items: Array<Item>) {
     }
 
     private fun updateItem(item: Item) {
-        decreaseQuality(item)
         decreaseSellInDays(item)
-
-        if (item.sellInDays < 0) {
-            decreaseQuality(item)
-        }
+        decreaseQuality(item)
     }
 
     private fun updateBrie(brie: Item) {
@@ -51,6 +47,9 @@ class GildedRose(var items: Array<Item>) {
 
     private fun decreaseQuality(item: Item) {
         item.quality = max(ITEM_MIN_QUALITY, item.quality - 1)
+        if (item.sellInDays < 0) {
+            item.quality = max(ITEM_MIN_QUALITY, item.quality - 1)
+        }
     }
 
     private fun decreaseSellInDays(item: Item) {
